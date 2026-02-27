@@ -6,5 +6,57 @@ Grupišite developere po tome da li trenutno koriste alate za veštačku intelig
 ## Query (v2)
 
 ```javascript
-// upit za developers2 kolekciju će biti dodat ovde kada bude dostavljen
+db.getCollection('developers2').aggregate([
+  {
+    
+    $match: {
+      "ConvertedCompYearly": { $gt: 0 },
+     "Country": "Serbia",
+      "AISelect": { $exists: true } 
+    }
+  },
+  {
+    
+    $group: {
+      _id: {
+        drzava: "$Country",
+        koristiAI: "$AISelect"
+      },
+      prosecnaPlata: { $avg: "$ConvertedCompYearly" },
+      ukupnoLjudiUGrupi: { $sum: 1 },
+      
+    
+      uciKnjige: {
+        $sum: {
+          $cond: [{ $in: ["Books / Physical media", { $ifNull: ["$LearnCode", []] }] }, 1, 0]
+        }
+      },
+      uciPrijatelji: {
+        $sum: {
+          $cond: [{ $in: ["Friend or family member", { $ifNull: ["$LearnCode", []] }] }, 1, 0]
+        }
+      }
+    }
+  },
+  {
+    
+    
+    $project: {
+      _id: 0,
+      drzava: "$_id.drzava",
+      koristiAI: "$_id.koristiAI",
+      prosecnaPlata: { $round: ["$prosecnaPlata", 2] },
+      procenti: {
+        knjige: { 
+          $round: [{ $multiply: [{ $divide: ["$uciKnjige", "$ukupnoLjudiUGrupi"] }, 100] }, 2] 
+        },
+        prijatelji: { 
+          $round: [{ $multiply: [{ $divide: ["$uciPrijatelji", "$ukupnoLjudiUGrupi"] }, 100] }, 2] 
+        }
+      },
+      brojIspitanika: "$ukupnoLjudiUGrupi"
+    }
+  },
+  { $sort: { prosecnaPlata: -1 } }
+])
 ```
