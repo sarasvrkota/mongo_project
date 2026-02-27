@@ -1,7 +1,7 @@
 Stack Overflow Data Analysis: MongoDB & Metabase Optimization
 Ovaj projekat se bavi analizom Stack Overflow ankete koristeći NoSQL (MongoDB) bazu podataka. Glavni fokus je na transformaciji nestrukturiranih podataka u optimizovane kolekcije spremne za naprednu analitiku.
 
-- Tehnologije i Alati
+## Tehnologije i Alati
 Python (Pandas): Za ETL (Extract, Transform, Load) proces i čišćenje podataka.
 
 MongoDB: Primarna NoSQL baza podataka.
@@ -12,8 +12,8 @@ Docker: Korišćen za kontejnerizaciju i brzo pokretanje Metabase platforme.
 
 Metabase: Alat za vizuelizaciju podataka i kreiranje dashboard-a.
 
-- Ključni koraci projekta
-1. Čišćenje i Transformacija (Python)
+# Ključni koraci projekta
+## Čišćenje i Transformacija (Python)
 Sirovi podaci iz CSV fajla su procesuirani kako bi odgovarali NoSQL formatu:
 
 Konverzija tipova: Polje YearsCodePro je očišćeno od tekstualnih vrednosti (npr. "Less than 1 year") i pretvoreno u integer.
@@ -22,7 +22,7 @@ Nizovi (Arrays): Polja sa višestrukim odgovorima (jezici, baze) razbijena su iz
 
 Kategorizacija: Kreirano je novo polje levelExperience koje deli developere na Junior, Mid i Senior kategorije.
 
-2. Modelovanje i Optimizacija 
+## Modelovanje i Optimizacija 
 Umesto korišćenja samo jedne ogromne kolekcije, kreirane su specifične kolekcije za optimizaciju upita:
 
 developers2 i technologies2: Osnovne, očišćene kolekcije.
@@ -33,7 +33,7 @@ org_size_computed: Kolekcija optimizovana za upite o veličini organizacije i je
 
 so_migration_stats: Kolekcija za analizu učestalosti poseta Stack Overflow-u.
 
-3. Indeksiranje
+## Indeksiranje
 U skripti su implementirani složeni indeksi (Compound Indexes) kako bi se ubrzalo filtriranje:
 
 Python
@@ -42,7 +42,7 @@ db["org_size_computed"].create_index([("orgSize", 1), ("count", -1)])
 4. Vizuelizacija (Metabase & Docker)
 Metabase je podignut unutar Docker kontejnera radi lakše prenosivosti. Povezan je sa MongoDB bazom kako bi se prikazali ključni trendovi.
 
-- Kako pokrenuti
+# Kako pokrenuti
 Pokrenite MongoDB lokalno (port 27017).
 
 Instalirajte zavisnosti: pip install pandas pymongo.
