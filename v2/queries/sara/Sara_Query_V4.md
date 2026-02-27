@@ -6,5 +6,29 @@ Pronađi programere koji posećuju StackOverflow sajt svakodnevno (`SOVisitFreq 
 ## Query (v2)
 
 ```javascript
-// upit za developers2 kolekciju će biti dodat ovde kada bude dostavljen
+db.getCollection('so_migration_stats').aggregate([
+	{
+    
+		// Grupisem po drzavi
+		$group: {
+			_id: "$country",
+			uporednaStatistika: {
+				$push: {
+					tipPosetioca: "$visitFreq",
+					plata: { $round: ["$avgSalary", 2] },
+					staz: { $round: ["$avgExp", 1] },
+					brojLjudi: "$count"
+				}
+			}
+		}
+	},
+	{
+		$project: {
+			_id: 0,
+			drzava: "$_id",
+			uporednaStatistika: "$uporednaStatistika"
+		}
+	},
+	{ $sort: { "drzava": 1 } }
+])
 ```
